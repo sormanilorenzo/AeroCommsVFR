@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroComms VFR | Comunicazioni Radio Aeronautiche</title>
+    <style>
+        :root {
+            --primary: #1a2a3a;
+            --secondary: #0d6efd;
+            --accent: #ff7700;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --info: #17a2b8;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --gray-dark: #343a40;
+            --gray-light: #e9ecef;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Inter', 'Open Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #e66c00;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .sections {
+            padding: 3rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .section-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-card-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .section-card-header i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .section-card-body {
+            padding: 1.5rem;
+        }
+
+        .section-card-body p {
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+        }
+
+        .content {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .communication-list {
+            margin-bottom: 2rem;
+        }
+
+        .communication-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .communication-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .comm-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .pilot {
+            background-color: var(--info);
+            color: white;
+        }
+
+        .tower {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .comm-title {
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .checkbox {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+
+        .comm-content {
+            padding-left: 52px;
+        }
+
+        .eng-content {
+            padding-left: 52px;
+            color: var(--gray);
+            font-style: italic;
+            display: none;
+            margin-top: 0.5rem;
+            border-left: 3px solid var(--gray-light);
+            padding-left: calc(52px + 0.5rem);
+        }
+
+        .phase-section {
+            margin-bottom: 3rem;
+        }
+
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--accent);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+        }
+
+        .toggle-label {
+            margin-right: 0.5rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: var(--gray-light);
+            border-radius: 30px;
+            padding: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.active {
+            background-color: var(--accent);
+        }
+
+        .toggle-switch::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            top: 5px;
+            left: 5px;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::before {
+            transform: translateX(30px);
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 50px 0 0 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #e66c00;
+        }
+
+        .glossary-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .glossary-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .glossary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .glossary-term {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .glossary-term span {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 5px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .glossary-definition {
+            color: var(--gray-dark);
+        }
+
+        .audio-button {
+            background-color: var(--info);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .audio-button:hover {
+            background-color: #138496;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .comm-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .icon {
+                margin-bottom: 0.5rem;
+            }
+
+            .checkbox {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .comm-content {
+                padding-left: 0;
+            }
+
+            .eng-content {
+                padding-left: 0.5rem;
+            }
+        }
+
+        /* Menu mobile */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                margin-top: 1rem;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div>Aero<span>Comms</span> VFR</div>
+                </div>
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <nav>
+                    <ul id="mainNav">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#decollo">Decollo</a></li>
+                        <li><a href="#in-volo">In Volo</a></li>
+                        <li><a href="#atterraggio">Atterraggio</a></li>
+                        <li><a href="#frasi-comuni">Frasi Comuni</a></li>
+                        <li><a href="#glossario">Glossario</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Comunicazioni VFR: La Guida Completa</h1>
+            <p>Una risorsa interattiva per piloti VFR che necessitano di un riferimento rapido e affidabile per le comunicazioni standard con la torre di controllo e i servizi di volo.</p>
+            <div class="buttons">
+                <a href="#decollo" class="btn btn-primary">Fase di Decollo</a>
+                <a href="#in-volo" class="btn btn-outline">Fase di Volo</a>
+                <a href="#atterraggio" class="btn btn-outline">Fase di Atterraggio</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container sections">
+        <div class="section-card">
+            <div class="section-card-header">
+                <i>🛫</i>
+                <h3>Fase di Decollo</h3>
+            </div>
+            <div class="section-card-body">
+                <p>Tutte le comunicazioni standard durante la preparazione al volo, il rullaggio e il decollo.</p>
+                <a href="#decollo" class="btn btn-primary">Vai alla sezione</a>
+            </div>
+        </div>
+        <div class="section-card">
+            <div class="section-card-header">
+                <i>✈️</i>
+                <h3>In Volo</h3>
+            </div>
+            <div class="section-card-body">
+                <p>Comunicazioni durante la fase di volo, con FIS, richieste meteo e cambio frequenze.</p>
+                <a href="#in-volo" class="btn btn-primary">Vai alla sezione</a>
+            </div>
+        </div>
+        <div class="section-card">
+            <div class="section-card-header">
+                <i>🛬</i>
+                <h3>Fase di Atterraggio</h3>
+            </div>
+            <div class="section-card-body">
+                <p>Comunicazioni per l'ingresso CTR, il circuito di traffico e la fase post-atterraggio.</p>
+                <a href="#atterraggio" class="btn btn-primary">Vai alla sezione</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="content" id="decollo">
+        <div class="container phase-section">
+            <h2 class="section-title">Fase di Decollo</h2>
+            
+            <div class="toggle-container">
+                <span class="toggle-label">Mostra Inglese</span>
+                <div class="toggle-switch" id="toggleLang"></div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Prima del Rullaggio</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Richiesta informazioni ATIS</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Informazioni, I-ABCD, richiede informazioni ATIS."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Information, I-ABCD, request ATIS information."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Risposta ATIS</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Malpensa Informazioni, informazione Bravo in vigore, QNH 1013, pista in uso 36, temperatura 22, punto di rugiada 12, vento 360 gradi 8 nodi."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Malpensa Information, information Bravo current, QNH 1013, runway in use 36, temperature 22, dew point 12, wind 360 degrees 8 knots."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Richiesta messa in moto</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Terra, I-ABCD, Cessna 172 parcheggio Nord, informazione Bravo ricevuta, richiede messa in moto per volo locale VFR."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Ground, I-ABCD, Cessna 172 North parking, information Bravo received, request start-up for local VFR flight."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Autorizzazione messa in moto</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Malpensa Terra, messa in moto approvata, QNH 1013, richiami pronto al rullaggio."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Malpensa Ground, start-up approved, QNH 1013, call ready to taxi."
+                    </div>
+                </div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Fase di Rullaggio</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Richiesta rullaggio</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Terra, I-ABCD, pronto al rullaggio."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Ground, I-ABCD, ready to taxi."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Autorizzazione al rullaggio</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Malpensa Terra, rullaggi via taxiway A, punto attesa pista 36."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Malpensa Ground, taxi via taxiway A to holding point runway 36."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma istruzioni</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Rulliamo via taxiway A, punto attesa pista 36, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Taxi via taxiway A to holding point runway 36, I-ABCD."
+                    </div>
+                </div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Decollo</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Comunicazione al punto attesa</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Torre, I-ABCD al punto attesa pista 36, pronto al decollo."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Tower, I-ABCD at holding point runway 36, ready for departure."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Autorizzazione al decollo</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Malpensa Torre, autorizzato al decollo pista 36, vento 360 gradi 8 nodi."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Malpensa Tower, cleared for take-off runway 36, wind 360 degrees 8 knots."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma autorizzazione</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Autorizzati al decollo pista 36, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Cleared for take-off runway 36, I-ABCD."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Istruzioni dopo il decollo</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, in contatto con Milano Informazioni sulla frequenza 124.925, buon volo."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, contact Milano Information on frequency 124.925, have a good flight."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma cambio frequenza</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Contatteremo Milano Informazioni su 124.925, grazie e arrivederci, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Will contact Milano Information on 124.925, thank you and goodbye, I-ABCD."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content" id="in-volo">
+        <div class="container phase-section">
+            <h2 class="section-title">Fase di Volo</h2>
+            
+            <div class="toggle-container">
+                <span class="toggle-label">Mostra Inglese</span>
+                <div class="toggle-switch" id="toggleLangFlight"></div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Comunicazioni con FIS</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Primo contatto con FIS</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Milano Informazioni, I-ABCD, buongiorno."
+                    </div>
+                    <div class="eng-content">
+                        "Milano Information, I-ABCD, good morning."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Risposta FIS</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Milano Informazioni, buongiorno, prosegua."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Milano Information, good morning, go ahead."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Informazioni sul volo</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Cessna 172, decollato da Malpensa 5 minuti fa, in salita verso 3000 piedi, diretto a Nord verso Lago di Como, stimiamo sorvolo di Como tra 20 minuti."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Cessna 172, departed from Malpensa 5 minutes ago, climbing to 3000 feet, heading North towards Lake Como, estimating Como in 20 minutes."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Conferma FIS</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Milano Informazioni, ricevuto, riporti sorvolo Como, QNH 1013."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Milano Information, roger, report overhead Como, QNH 1013."
+                    </div>
+                </div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Richieste Meteo</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Richiesta informazioni meteo</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Milano Informazioni, I-ABCD, richiede ultime condizioni meteo per Lugano."
+                    </div>
+                    <div class="eng-content">
+                        "Milano Information, I-ABCD, request latest weather for Lugano."
+                    </div>
+                </div>
+
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Informazioni meteo</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Lugano riporta cielo sereno, visibilità oltre 10 km, vento 090 gradi 5 nodi, QNH 1014, temperatura 20 gradi."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Lugano reports clear sky, visibility more than 10 km, wind 090 degrees 5 knots, QNH 1014, temperature 20 degrees."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma ricezione</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Ricevuto informazioni meteo per Lugano, grazie, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Roger weather information for Lugano, thank you, I-ABCD."
+                    </div>
+                </div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Cambio Frequenze</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Istruzioni cambio frequenza</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, contatti ora Lugano Avvicinamento sulla frequenza 118.300."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, contact now Lugano Approach on frequency 118.300."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma cambio frequenza</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Contatto Lugano Avvicinamento su 118.300, grazie e arrivederci, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Contacting Lugano Approach on 118.300, thank you and goodbye, I-ABCD."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Primo contatto nuova frequenza</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Lugano Avvicinamento, I-ABCD, buongiorno."
+                    </div>
+                    <div class="eng-content">
+                        "Lugano Approach, I-ABCD, good morning."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content" id="atterraggio">
+        <div class="container phase-section">
+            <h2 class="section-title">Fase di Atterraggio</h2>
+            
+            <div class="toggle-container">
+                <span class="toggle-label">Mostra Inglese</span>
+                <div class="toggle-switch" id="toggleLangLanding"></div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Ingresso CTR</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Richiesta ingresso CTR</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Avvicinamento, I-ABCD, Cessna 172, in arrivo da Nord, 15 NM a Nord del campo, 3000 piedi, richiede istruzioni per l'arrivo."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Approach, I-ABCD, Cessna 172, inbound from North, 15 NM North of the field, 3000 feet, request arrival instructions."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Autorizzazione ingresso CTR</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Malpensa Avvicinamento, autorizzato ad entrare nel CTR di Malpensa via Nord a 2000 piedi, QNH 1013, informazione Charlie in vigore, riporti 5 miglia a Nord."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Malpensa Approach, cleared to enter Malpensa CTR via North at 2000 feet, QNH 1013, information Charlie current, report 5 miles North."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma istruzioni</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Autorizzati ad entrare CTR via Nord a 2000 piedi, QNH 1013, riporteremo 5 miglia a Nord, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Cleared to enter CTR via North at 2000 feet, QNH 1013, will report 5 miles North, I-ABCD."
+                    </div>
+                </div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Circuito di Traffico</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Riporto posizione</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Torre, I-ABCD, 5 miglia a Nord, 2000 piedi."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Tower, I-ABCD, 5 miles North, 2000 feet."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Istruzioni circuito</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, Malpensa Torre, inserirsi in sottovento sinistro pista 36, numero 2 in sequenza, riporti in sottovento."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, Malpensa Tower, join left downwind runway 36, number 2 in sequence, report downwind."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Riporto sottovento</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Torre, I-ABCD in sottovento sinistro pista 36."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Tower, I-ABCD on left downwind runway 36."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Istruzioni finale</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, numero 1, riporti in finale pista 36."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, number 1, report final runway 36."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Riporto finale</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Malpensa Torre, I-ABCD in finale pista 36."
+                    </div>
+                    <div class="eng-content">
+                        "Malpensa Tower, I-ABCD on final runway 36."
+                    </div>
+                </div>
+            </div>
+            
+            <div class="communication-list">
+                <h3>Atterraggio e Post-Atterraggio</h3>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Autorizzazione atterraggio</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, autorizzato all'atterraggio pista 36, vento 360 gradi 8 nodi."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, cleared to land runway 36, wind 360 degrees 8 knots."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma autorizzazione</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Autorizzati all'atterraggio pista 36, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Cleared to land runway 36, I-ABCD."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon tower">T</div>
+                        <div class="comm-title">Istruzioni post-atterraggio</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD, liberi la pista al raccordo C, contatti Terra 121.900."
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD, vacate runway at taxiway C, contact Ground 121.900."
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma istruzioni</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="comm-content">
+                        "Liberiamo al raccordo C, contattiamo Terra 121.900, I-ABCD."
+                    </div>
+                    <div class="eng-content">
+                        "Vacating at taxiway C, contacting Ground 121.900, I-ABCD."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content" id="frasi-comuni">
+        <div class="container phase-section">
+            <h2 class="section-title">Frasi Comuni</h2>
+            
+            <div class="toggle-container">
+                <span class="toggle-label">Mostra Inglese</span>
+                <div class="toggle-switch" id="toggleLangCommon"></div>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cerca una frase...">
+                    <button class="search-button">🔍</button>
+                </div>
+            </div>
+            
+            <div class="communication-list">
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma ricezione messaggio</div>
+                    </div>
+                    <div class="comm-content">
+                        "Roger" o "Ricevuto" - Conferma di aver ricevuto il messaggio senza necessità di ripetere.
+                    </div>
+                    <div class="eng-content">
+                        "Roger" - Confirms message receipt without the need to repeat back.
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Negazione</div>
+                    </div>
+                    <div class="comm-content">
+                        "Negativo" - Usato per negare un'affermazione o una richiesta precedente.
+                    </div>
+                    <div class="eng-content">
+                        "Negative" - Used to deny a statement or previous request.
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Conferma affermazione</div>
+                    </div>
+                    <div class="comm-content">
+                        "Affermativo" - Usato per confermare un'affermazione o una richiesta precedente.
+                    </div>
+                    <div class="eng-content">
+                        "Affirmative" - Used to confirm a statement or previous request.
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Richiesta ripetizione</div>
+                    </div>
+                    <div class="comm-content">
+                        "Say again" o "Ripeta" - Richiesta di ripetizione del messaggio precedente.
+                    </div>
+                    <div class="eng-content">
+                        "Say again" - Request to repeat the previous message.
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Attendere</div>
+                    </div>
+                    <div class="comm-content">
+                        "Standby" o "In attesa" - Richiesta di attendere per ulteriori istruzioni.
+                    </div>
+                    <div class="eng-content">
+                        "Standby" - Request to wait for further instructions.
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Spelling alfabeto fonetico</div>
+                    </div>
+                    <div class="comm-content">
+                        "I-ABCD" si pronuncia "India-Alfa-Bravo-Charlie-Delta"
+                    </div>
+                    <div class="eng-content">
+                        "I-ABCD" is pronounced "India-Alpha-Bravo-Charlie-Delta"
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Chiamata d'emergenza</div>
+                    </div>
+                    <div class="comm-content">
+                        "MAYDAY, MAYDAY, MAYDAY" - Chiamata in caso di emergenza grave e imminente.
+                    </div>
+                    <div class="eng-content">
+                        "MAYDAY, MAYDAY, MAYDAY" - Call in case of serious and imminent emergency.
+                    </div>
+                </div>
+                
+                <div class="communication-item">
+                    <div class="comm-header">
+                        <div class="icon pilot">P</div>
+                        <div class="comm-title">Chiamata d'urgenza</div>
+                    </div>
+                    <div class="comm-content">
+                        "PAN PAN, PAN PAN, PAN PAN" - Chiamata in caso di situazione urgente ma non di immediato pericolo.
+                    </div>
+                    <div class="eng-content">
+                        "PAN PAN, PAN PAN, PAN PAN" - Call in case of urgent situation but not immediate danger.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content" id="glossario">
+        <div class="container phase-section">
+            <h2 class="section-title">Glossario VFR</h2>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchGlossary" class="search-input" placeholder="Cerca nel glossario...">
+                    <button class="search-button">🔍</button>
+                </div>
+            </div>
+            
+            <div class="glossary-container">
+                <div class="glossary-item">
+                    <div class="glossary-term">AGL <span>Alt.</span></div>
+                    <div class="glossary-definition">Above Ground Level - Altitudine rispetto al suolo.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">AMSL <span>Alt.</span></div>
+                    <div class="glossary-definition">Above Mean Sea Level - Altitudine rispetto al livello medio del mare.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">ATIS <span>Com.</span></div>
+                    <div class="glossary-definition">Automatic Terminal Information Service - Servizio automatico di informazioni terminali, trasmesse in continuo su una determinata frequenza.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">ATC <span>Serv.</span></div>
+                    <div class="glossary-definition">Air Traffic Control - Controllo del Traffico Aereo, servizio fornito per mantenere la separazione tra aeromobili.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">CTR <span>Spazio</span></div>
+                    <div class="glossary-definition">Control Zone - Zona di Controllo, spazio aereo controllato che si estende dalla superficie fino a un limite superiore specificato.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">FIS <span>Serv.</span></div>
+                    <div class="glossary-definition">Flight Information Service - Servizio Informazioni Volo, fornisce consigli e informazioni utili per la condotta sicura ed efficiente dei voli.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">QNH <span>Alt.</span></div>
+                    <div class="glossary-definition">Pressione atmosferica al livello del mare. Quando impostato sull'altimetro, questo mostrerà l'altitudine dell'aeroporto quando l'aeromobile è al suolo.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">TMA <span>Spazio</span></div>
+                    <div class="glossary-definition">Terminal Control Area - Area di Controllo Terminale, spazio aereo controllato che si estende verso l'alto da un limite specificato al di sopra della terra.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">VMC <span>Meteo</span></div>
+                    <div class="glossary-definition">Visual Meteorological Conditions - Condizioni Meteorologiche di Volo a Vista, condizioni atmosferiche che permettono il volo VFR.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">VFR <span>Regole</span></div>
+                    <div class="glossary-definition">Visual Flight Rules - Regole del Volo a Vista, insieme di norme che permettono al pilota di operare l'aeromobile con riferimento visivo al suolo.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">IFR <span>Regole</span></div>
+                    <div class="glossary-definition">Instrument Flight Rules - Regole del Volo Strumentale, insieme di norme che permettono al pilota di operare l'aeromobile facendo riferimento esclusivamente agli strumenti di bordo.</div>
+                </div>
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">NM <span>Unità</span></div>
+                    <div class="glossary-definition">Nautical Mile - Miglio Nautico, unità di misura della distanza pari a 1.852 metri.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 AeroComms VFR - Guida alle Comunicazioni Radio Aeronautiche</p>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#decollo">Decollo</a>
+                    <a href="#in-volo">In Volo</a>
+                    <a href="#atterraggio">Atterraggio</a>
+                    <a href="#frasi-comuni">Frasi Comuni</a>
+                    <a href="#glossario">Glossario</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle menu mobile
+        const menuToggle = document.getElementById('menuToggle');
+        const mainNav = document.getElementById('mainNav');
+        
+        menuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+        
+        // Toggle lingua
+        const toggleLang = document.getElementById('toggleLang');
+        const toggleLangFlight = document.getElementById('toggleLangFlight');
+        const toggleLangLanding = document.getElementById('toggleLangLanding');
+        const toggleLangCommon = document.getElementById('toggleLangCommon');
+        
+        function setupToggle(toggleElement) {
+            if (!toggleElement) return;
+            
+            toggleElement.addEventListener('click', () => {
+                toggleElement.classList.toggle('active');
+                const section = toggleElement.closest('.phase-section');
+                const engContents = section.querySelectorAll('.eng-content');
+                
+                engContents.forEach(content => {
+                    content.style.display = toggleElement.classList.contains('active') ? 'block' : 'none';
+                });
+            });
+        }
+        
+        setupToggle(toggleLang);
+        setupToggle(toggleLangFlight);
+        setupToggle(toggleLangLanding);
+        setupToggle(toggleLangCommon);
+        
+        // Checkbox interattive
+        const checkboxes = document.querySelectorAll('.checkbox');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const item = checkbox.closest('.communication-item');
+                if (checkbox.checked) {
+                    item.style.backgroundColor = '#e3f2fd';
+                } else {
+                    item.style.backgroundColor = 'white';
+                }
+            });
+        });
+        
+        // Ricerca nelle frasi comuni
+        const searchInput = document.getElementById('searchInput');
+        const searchGlossary = document.getElementById('searchGlossary');
+        
+        function setupSearch(searchElement, itemsSelector) {
+            if (!searchElement) return;
+            
+            searchElement.addEventListener('input', () => {
+                const searchTerm = searchElement.value.toLowerCase();
+                const items = document.querySelectorAll(itemsSelector);
+                
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+        }
+        
+        setupSearch(searchInput, '#frasi-comuni .communication-item');
+        setupSearch(searchGlossary, '#glossario .glossary-item');
+        
+        // Smooth scroll per navigazione
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Chiudi menu mobile se aperto
+                    if (mainNav.classList.contains('active')) {
+                        mainNav.classList.remove('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+                
